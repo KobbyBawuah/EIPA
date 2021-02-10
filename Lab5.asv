@@ -1,6 +1,6 @@
 set(0,'DefaultFigureWindowStyle','docked')
-set(0,'defaulttaxesfontsize',20)
-set(0,'defaulttaxesfontname','Times New Roman')
+set(0,'defaultaxesfontsize',20)
+set(0,'defaultaxesfontname','Times New Roman')
 set(0,'DefaultLineLineWidth',2);
 
 nx = 50;
@@ -12,6 +12,27 @@ Inclusion = 0;
 
 for i = 1 : nx
    for j = 1:ny
+        n=j+(i-1)*ny;
+        if i==1 || i==nx
+            G(n) = 0;
+            V(:,n)=0;
+            V(n,n)=1;
+        elseif j==1 || j==ny
+            G(n) = 0;
+            V(:,n)=0;
+            V(n,n)=1;
+        else
+            nxm = j+(i-2)*ny;
+            nxp = j+(i)*ny;
+            nym = (j-1)+(i-1)*ny;
+            nyp = (j+1)+(i-1)*ny;            
+            
+            V(n,n) = -4;
+            V(n,nxm)= 1;
+            V(n,nxp) = 1;
+            V(n,nym) = 1;
+            V(n,nyp) = 1;
+        end
    end
 end
 
@@ -36,4 +57,7 @@ for k = 1:nmodes
             n = i +(j-1) * nx;
             V(i,j) = M(n);
         end
-        
+        subplot(np,np,k), surf(V, 'linestyle','none')
+        title(['EV = ' num2str(D(k,k))])
+    end
+end
